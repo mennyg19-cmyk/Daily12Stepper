@@ -2,7 +2,7 @@
  * Metrics / usage screen — Apple Health–style layout with line charts.
  */
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, ScrollView, RefreshControl, Dimensions } from 'react-native';
+import { View, Text, ScrollView, RefreshControl, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { AppHeader } from '@/components/AppHeader';
@@ -11,6 +11,8 @@ import { useIconColors } from '@/lib/iconTheme';
 import { getMetricsSummary } from '@/lib/metrics';
 import type { MetricsSummary, DayMetrics } from '@/lib/metrics';
 import { format, parseISO } from 'date-fns';
+
+const DAYS_OPTIONS = [7, 14, 30] as const;
 
 const CHART_WIDTH = Dimensions.get('window').width - 48;
 const CHART_HEIGHT = 140;
@@ -89,11 +91,12 @@ export default function MetricsScreen() {
   const iconColors = useIconColors();
   const [metrics, setMetrics] = useState<MetricsSummary | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [daysBack, setDaysBack] = useState<7 | 14 | 30>(7);
 
   const load = useCallback(async () => {
-    const m = await getMetricsSummary(7);
+    const m = await getMetricsSummary(daysBack);
     setMetrics(m);
-  }, []);
+  }, [daysBack]);
 
   useEffect(() => {
     load();
@@ -114,9 +117,31 @@ export default function MetricsScreen() {
     ? metrics.last7Days.reduce((a, d) => a + d.meditationSeconds, 0) / metrics.last7Days.length
     : 0;
 
+  const daysLabel = daysBack === 7 ? 'Last 7 days' : daysBack === 14 ? 'Last 14 days' : 'Last 30 days';
+
   return (
     <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-background">
       <AppHeader title="Metrics" rightSlot={<ThemeToggle />} showBack />
+
+      <View className="flex-row gap-2 px-6 py-3 border-b border-border">
+        {DAYS_OPTIONS.map((d) => (
+          <TouchableOpacity
+            key={d}
+            onPress={() => setDaysBack(d)}
+            className={`flex-1 py-2 rounded-xl items-center ${
+              daysBack === d ? 'bg-primary' : 'bg-muted'
+            }`}
+          >
+            <Text
+              className={`text-sm font-semibold ${
+                daysBack === d ? 'text-primary-foreground' : 'text-muted-foreground'
+              }`}
+            >
+              {d} days
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
       <ScrollView
         className="flex-1"
@@ -134,7 +159,7 @@ export default function MetricsScreen() {
                 <Text className="text-3xl font-bold text-foreground font-mono tabular-nums">
                   {formatDuration(metrics.totalStepworkSeconds)}
                 </Text>
-                <Text className="text-sm text-muted-foreground mt-0.5">Last 7 days</Text>
+                <Text className="text-sm text-muted-foreground mt-0.5">{daysLabel}</Text>
               </View>
               <View className="items-end">
                 <Text className="text-lg font-semibold text-foreground font-mono tabular-nums">
@@ -156,7 +181,7 @@ export default function MetricsScreen() {
                 <Text className="text-3xl font-bold text-foreground font-mono tabular-nums">
                   {formatDuration(metrics.totalMeditationSeconds)}
                 </Text>
-                <Text className="text-sm text-muted-foreground mt-0.5">Last 7 days</Text>
+                <Text className="text-sm text-muted-foreground mt-0.5">{daysLabel}</Text>
               </View>
               <View className="items-end">
                 <Text className="text-lg font-semibold text-foreground font-mono tabular-nums">
@@ -175,7 +200,7 @@ export default function MetricsScreen() {
             <Text className="text-3xl font-bold text-foreground font-mono tabular-nums">
               {metrics.totalStepsCompleted}
             </Text>
-            <Text className="text-sm text-muted-foreground mt-0.5">Last 7 days</Text>
+            <Text className="text-sm text-muted-foreground mt-0.5">{daysLabel}</Text>
           </View>
         </View>
 

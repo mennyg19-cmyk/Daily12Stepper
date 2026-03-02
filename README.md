@@ -76,7 +76,7 @@ Each step screen includes:
 
 ### Metrics
 
-- **Stepwork** — Line chart of last 7 days; total and daily average.
+- **Stepwork** — Line chart; total and daily average. Time range: 7, 14, or 30 days.
 - **Meditation** — Total and daily average.
 - **Steps completed** — Count over last 7 days.
 - **Time by step** — Breakdown per step.
@@ -96,7 +96,8 @@ Each step screen includes:
 - **Privacy lock** — Face ID or password for sensitive screens.
 - **App Lock** — Block/hide apps until commitment (Cape-style).
 - **Notifications** — Per-type reminders (commitment, stepwork, per-step, tools).
-- **Data** — Export and import JSON backup.
+- **Data** — Export and import JSON backup (includes all SQLite tables and AsyncStorage).
+- **Auto backup** — Optionally save a backup to device when you open the app (daily or weekly).
 
 ### Privacy Lock
 
@@ -161,7 +162,7 @@ app/                    # Screens (Expo Router)
   app-lock/             # App Lock (presets, schedule, tiers, etc.)
 
 components/             # Shared UI
-  AppHeader, ModalSurface, PrivacyGate, CommitmentGate, etc.
+  AppHeader, ModalSurface, PrivacyGate, CommitmentGate, ErrorBoundary, OnboardingScreen, etc.
 
 contexts/               # React context
   PrivacyContext.tsx
@@ -238,11 +239,17 @@ eas update --message "Description of changes"
 
 ---
 
+## Onboarding
+
+- First-run onboarding introduces the app: commitment, steps, inventories, privacy.
+- Skip anytime or tap through to "Let's go!".
+
 ## Data & Privacy
 
 - All data is stored locally on your device (SQLite + AsyncStorage).
-- Export creates a JSON file you can backup or share.
+- Export creates a JSON file you can backup or share (includes all tables and AsyncStorage).
 - Import restores from a previously exported file.
+- Auto backup can save to device automatically (daily or weekly) when you open the app.
 - Privacy lock and sponsor password use SecureStore for sensitive values.
 
 ---

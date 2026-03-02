@@ -1,7 +1,7 @@
 /**
  * Root layout — tab navigator for Daily 12 Stepper.
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Tabs } from 'expo-router';
@@ -9,12 +9,16 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PrivacyProvider } from '@/contexts/PrivacyContext';
 import { CommitmentGate } from '@/components/CommitmentGate';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { OnboardingScreen } from '@/components/OnboardingScreen';
 import { Home, Settings } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { useIconColors } from '@/lib/iconTheme';
 import { themeColors } from '@/theme';
 import { isSQLiteAvailable } from '@/lib/database/db';
 import { logger } from '@/lib/logger';
+import { hasCompletedOnboarding } from '@/lib/onboarding';
+import { runScheduledBackupIfDue } from '@/lib/autoBackup';
 import '@/global.css';
 
 function TabNavigator() {
@@ -75,6 +79,7 @@ function TabNavigator() {
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
   const [ready, setReady] = useState(false);
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean | null>(null);
   const colors = themeColors[colorScheme === 'dark' ? 'dark' : 'light'];
 
   useEffect(() => {
@@ -84,6 +89,20 @@ export default function RootLayout() {
         setReady(true);
       })
       .catch(() => setReady(true));
+  }, []);
+
+  useEffect(() => {
+    hasCompletedOnboarding().then(setOnboardingComplete);
+  }, []);
+
+  useEffect(() => {
+    if (ready && onboardingComplete) {
+      runScheduledBackupIfDue().catch(() => {});
+    }
+  }, [ready, onboardingComplete]);
+
+  const handleOnboardingComplete = useCallback(() => {
+    setOnboardingComplete(true);
   }, []);
 
   if (!ready) {
@@ -97,17 +116,32 @@ export default function RootLayout() {
     );
   }
 
+  if (onboardingComplete === false) {
+    return (
+      <ThemeProvider>
+        <SafeAreaProvider>
+          <StatusBar style="auto" />
+          <View style={{ flex: 1, backgroundColor: colors.background }}>
+            <OnboardingScreen onComplete={handleOnboardingComplete} />
+          </View>
+        </SafeAreaProvider>
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
       <SafeAreaProvider>
-        <PrivacyProvider>
-          <StatusBar style="auto" />
-          <View style={{ flex: 1, backgroundColor: colors.background }}>
-            <CommitmentGate>
-              <TabNavigator />
-            </CommitmentGate>
-          </View>
-        </PrivacyProvider>
+        <ErrorBoundary>
+          <PrivacyProvider>
+            <StatusBar style="auto" />
+            <View style={{ flex: 1, backgroundColor: colors.background }}>
+              <CommitmentGate>
+                <TabNavigator />
+              </CommitmentGate>
+            </View>
+          </PrivacyProvider>
+        </ErrorBoundary>
       </SafeAreaProvider>
     </ThemeProvider>
   );
