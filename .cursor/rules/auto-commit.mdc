@@ -16,4 +16,10 @@ git add . && git commit -m "Brief description of what was done"
 git push
 ```
 
-Use a descriptive commit message that summarizes the changes (e.g. "Fix privacy lock back navigation", "Add metrics line chart", "Add notifications module").
+3. **EAS update** — Publish an OTA update with a message describing the changes:
+
+```bash
+eas update --message "Brief description of what was done"
+```
+
+Use descriptive messages that summarize the changes (e.g. "Fix privacy lock back navigation", "Add metrics line chart", "Add notifications module").

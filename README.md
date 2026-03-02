@@ -230,6 +230,12 @@ npx eas build --platform ios
 npx eas build --platform android
 ```
 
+For EAS Update (OTA):
+
+```bash
+eas update --message "Description of changes"
+```
+
 ---
 
 ## Data & Privacy
