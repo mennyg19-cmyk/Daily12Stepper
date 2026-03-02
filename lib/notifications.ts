@@ -76,11 +76,12 @@ export async function scheduleAllNotifications(): Promise<void> {
   await Notifications.cancelAllScheduledNotificationsAsync();
 
   const configs = await getAllNotificationConfigs();
-  const types = ['commitment', 'stepwork', ...([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => `step_${n}`))] as const;
+  const types = ['commitment', 'stepwork', 'sponsor_work_time_remaining', ...([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => `step_${n}`))] as const;
 
   const titles: Record<string, string> = {
     commitment: 'Daily commitment',
     stepwork: 'Stepwork',
+    sponsor_work_time_remaining: 'Sponsor work time',
     step_1: 'Step 1',
     step_2: 'Step 2',
     step_3: 'Step 3',
@@ -99,10 +100,17 @@ export async function scheduleAllNotifications(): Promise<void> {
     const cfg = configs[type];
     if (cfg?.enabled && cfg.time) {
       const [h, m] = cfg.time.split(':').map(Number);
+      let body = `Reminder: ${titles[type] ?? type}`;
+      if (type === 'commitment') body = "Time to make your daily commitment.";
+      else if (type === 'stepwork') body = "Time for your stepwork.";
+      else if (type === 'sponsor_work_time_remaining') {
+        const mins = cfg.minutesLeft ?? 20;
+        body = `If you still have ${mins}+ mins of sponsor work time left, this is your reminder.`;
+      }
       await Notifications.scheduleNotificationAsync({
         content: {
           title: titles[type] ?? type,
-          body: type === 'commitment' ? "Time to make your daily commitment." : type === 'stepwork' ? "Time for your stepwork." : `Reminder: ${titles[type]}`,
+          body,
           sound: true,
           data: { type },
         },

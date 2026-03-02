@@ -67,6 +67,7 @@ function TabNavigator() {
       <Tabs.Screen name="app-lock" options={{ href: null }} />
       <Tabs.Screen name="profile" options={{ href: null }} />
       <Tabs.Screen name="privacy" options={{ href: null }} />
+      <Tabs.Screen name="notifications" options={{ href: null }} />
     </Tabs>
   );
 }
