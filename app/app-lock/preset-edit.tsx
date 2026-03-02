@@ -3,7 +3,10 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
+import { AppHeader } from '@/components/AppHeader';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { ChevronRight, Check } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import {
@@ -107,8 +110,10 @@ export default function PresetEditScreen() {
   if (!config) return null;
 
   return (
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-background">
+      <AppHeader title="Edit Preset" rightSlot={<ThemeToggle />} showBack />
     <ScrollView
-      className="flex-1 bg-background"
+      className="flex-1"
       contentContainerStyle={{ padding: 24, paddingBottom: 40 }}
     >
       <View className="rounded-2xl p-4 bg-card border border-border mb-4">
@@ -228,5 +233,6 @@ export default function PresetEditScreen() {
         </Text>
       </TouchableOpacity>
     </ScrollView>
+    </SafeAreaView>
   );
 }

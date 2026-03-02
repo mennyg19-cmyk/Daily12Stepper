@@ -3,7 +3,10 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { AppHeader } from '@/components/AppHeader';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { ChevronRight, Plus } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import { getAppLockConfig, saveAppLockConfig } from '@/features/app-lock/storage';
@@ -62,8 +65,10 @@ export default function AppLockTiersScreen() {
   if (!config) return null;
 
   return (
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-background">
+      <AppHeader title="Unlock Tiers" rightSlot={<ThemeToggle />} showBack />
     <ScrollView
-      className="flex-1 bg-background"
+      className="flex-1"
       contentContainerStyle={{ padding: 24, paddingBottom: 40 }}
     >
       <Text className="text-sm text-muted-foreground mb-4">
@@ -101,5 +106,6 @@ export default function AppLockTiersScreen() {
         <Text className="text-muted-foreground font-medium ml-2">Add tier</Text>
       </TouchableOpacity>
     </ScrollView>
+    </SafeAreaView>
   );
 }

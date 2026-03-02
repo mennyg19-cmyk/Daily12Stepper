@@ -4,7 +4,10 @@
  */
 import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, TextInput } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
+import { AppHeader } from '@/components/AppHeader';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { ChevronRight, Lock, Check, BookOpen, Calendar } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import {
@@ -144,9 +147,11 @@ export default function AppLockScreen() {
   if (!config) return null;
 
   return (
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-background">
+      <AppHeader title="App Lock" rightSlot={<ThemeToggle />} showBack onBackPress={() => router.replace('/settings')} />
     <PrivacyGate onCancel={() => router.replace('/settings')}>
     <ScrollView
-      className="flex-1 bg-background"
+      className="flex-1"
       contentContainerStyle={{ padding: 24, paddingBottom: 40 }}
     >
       <View className="rounded-2xl p-4 bg-muted/30 border border-border mb-6">
@@ -370,5 +375,6 @@ export default function AppLockScreen() {
       </ModalSurface>
     </ScrollView>
     </PrivacyGate>
+    </SafeAreaView>
   );
 }

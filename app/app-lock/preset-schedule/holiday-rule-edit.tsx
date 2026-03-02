@@ -3,7 +3,10 @@
  */
 import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
+import { AppHeader } from '@/components/AppHeader';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Check } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import {
@@ -87,8 +90,10 @@ export default function HolidayRuleEditScreen() {
   if (!schedule) return null;
 
   return (
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-background">
+      <AppHeader title="Holiday Rule" rightSlot={<ThemeToggle />} showBack />
     <ScrollView
-      className="flex-1 bg-background"
+      className="flex-1"
       contentContainerStyle={{ padding: 24, paddingBottom: 40 }}
     >
       <Text className="text-sm font-medium text-foreground mb-2">Holiday category</Text>
@@ -172,5 +177,6 @@ export default function HolidayRuleEditScreen() {
         <Text className="text-primary-foreground font-semibold">Save rule</Text>
       </TouchableOpacity>
     </ScrollView>
+    </SafeAreaView>
   );
 }

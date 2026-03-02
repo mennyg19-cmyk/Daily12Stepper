@@ -5,10 +5,15 @@ alwaysApply: true
 
 # Auto-commit after changes
 
-After completing any coding task (fixes, features, refactors, or builds), run:
+After completing any coding task (fixes, features, refactors, or builds):
+
+1. **Update the README** — Keep `README.md` in sync with the project. Add or revise sections for new features, changed behavior, or updated structure.
+
+2. **Commit and push** — Stage all changes (including README), commit, and push to GitHub:
 
 ```bash
 git add . && git commit -m "Brief description of what was done"
+git push
 ```
 
 Use a descriptive commit message that summarizes the changes (e.g. "Fix privacy lock back navigation", "Add metrics line chart", "Add notifications module").

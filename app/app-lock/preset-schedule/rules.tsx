@@ -3,7 +3,10 @@
  */
 import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
+import { AppHeader } from '@/components/AppHeader';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { ChevronRight, Plus, Trash2 } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import {
@@ -79,8 +82,10 @@ export default function PresetRulesScreen() {
   if (!schedule) return null;
 
   return (
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-background">
+      <AppHeader title="Day Rules" rightSlot={<ThemeToggle />} showBack />
     <ScrollView
-      className="flex-1 bg-background"
+      className="flex-1"
       contentContainerStyle={{ padding: 24, paddingBottom: 40 }}
     >
       <Text className="text-sm text-muted-foreground mb-4">
@@ -114,5 +119,6 @@ export default function PresetRulesScreen() {
         <Text className="text-primary font-medium ml-2">Add rule</Text>
       </TouchableOpacity>
     </ScrollView>
+    </SafeAreaView>
   );
 }

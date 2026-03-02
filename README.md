@@ -107,6 +107,7 @@ Each step screen includes:
 ### App Lock
 
 - **Concept** — Block or hide apps until you make your daily commitment (similar to Cape).
+- **UI** — App Lock screens use the same layout and header as the rest of the app (consistent back button, theme toggle, safe area).
 - **Presets** — Light, Medium, Heavy, Extreme + custom presets.
 - **Schedule** — Morning (e.g. 6 AM), night (e.g. 10 PM), or custom.
 - **Lock mode** — Full (block all) or tiered (unlock app groups as you complete steps).

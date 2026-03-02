@@ -3,7 +3,10 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
+import { AppHeader } from '@/components/AppHeader';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { ChevronRight, Check, Copy } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import {
@@ -80,8 +83,10 @@ export default function PresetDetailScreen() {
   const isActive = activeId === preset.id;
 
   return (
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-background">
+      <AppHeader title={preset.name} rightSlot={<ThemeToggle />} showBack />
     <ScrollView
-      className="flex-1 bg-background"
+      className="flex-1"
       contentContainerStyle={{ padding: 24, paddingBottom: 40 }}
     >
       {/* Header */}
@@ -181,5 +186,6 @@ export default function PresetDetailScreen() {
         </TouchableOpacity>
       )}
     </ScrollView>
+    </SafeAreaView>
   );
 }

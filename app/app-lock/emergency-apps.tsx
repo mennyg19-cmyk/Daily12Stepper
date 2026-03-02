@@ -3,6 +3,9 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppHeader } from '@/components/AppHeader';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { useIconColors } from '@/lib/iconTheme';
 import { getAppLockConfig, saveAppLockConfig } from '@/features/app-lock/storage';
 import { openAppPicker } from '@/features/app-lock/native';
@@ -41,8 +44,10 @@ export default function AppLockEmergencyAppsScreen() {
   if (!config) return null;
 
   return (
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-background">
+      <AppHeader title="Emergency Apps" rightSlot={<ThemeToggle />} showBack />
     <ScrollView
-      className="flex-1 bg-background"
+      className="flex-1"
       contentContainerStyle={{ padding: 24, paddingBottom: 40 }}
     >
       <Text className="text-sm text-muted-foreground mb-4">
@@ -64,5 +69,6 @@ export default function AppLockEmergencyAppsScreen() {
         </Text>
       </TouchableOpacity>
     </ScrollView>
+    </SafeAreaView>
   );
 }

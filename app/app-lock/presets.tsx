@@ -3,7 +3,10 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
+import { AppHeader } from '@/components/AppHeader';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { ChevronRight } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import {
@@ -39,8 +42,10 @@ export default function AppLockPresetsScreen() {
   );
 
   return (
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-background">
+      <AppHeader title="Presets" rightSlot={<ThemeToggle />} showBack onBackPress={() => router.replace('/app-lock')} />
     <ScrollView
-      className="flex-1 bg-background"
+      className="flex-1"
       contentContainerStyle={{ padding: 24, paddingBottom: 40 }}
     >
       <Text className="text-sm text-muted-foreground mb-4">
@@ -124,5 +129,6 @@ export default function AppLockPresetsScreen() {
         </View>
       )}
     </ScrollView>
+    </SafeAreaView>
   );
 }
