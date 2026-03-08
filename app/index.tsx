@@ -122,7 +122,7 @@ export default function DashboardScreen() {
       setBirthdayToday(bday);
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setStepsDone(done);
-    } catch (err) {
+    } catch {
       setCommitment(null);
     } finally {
       setLoading(false);

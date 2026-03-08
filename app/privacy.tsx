@@ -65,7 +65,7 @@ export default function PrivacySettingsScreen() {
       }
       setMode(newMode);
       await refreshLockState();
-    } catch (e) {
+    } catch {
       Alert.alert('Failed to save');
     } finally {
       setSaving(false);

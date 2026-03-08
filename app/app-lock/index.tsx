@@ -3,7 +3,7 @@
  * Sponsor password: when set, only sponsor can change rules.
  */
 import React, { useState, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, TextInput } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { AppHeader } from '@/components/AppHeader';
@@ -111,7 +111,7 @@ export default function AppLockScreen() {
         setConfig(updated);
         await saveAppLockConfig(updated);
       } else if (action?.type === 'nav') {
-        router.push(action.path as any);
+        router.push(action.path as Parameters<typeof router.push>[0]);
       }
     } else {
       Alert.alert('Wrong password');

@@ -4,7 +4,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useIconColors } from '@/lib/iconTheme';
 import {
   getSobrietyStartDatetime,
   setSobrietyStartDatetime,
@@ -32,7 +31,6 @@ function formatDuration(seconds: number): string {
 
 export function SobrietyCard() {
   const router = useRouter();
-  const iconColors = useIconColors();
   const [startDatetime, setStartDatetime] = useState<string | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [showSetModal, setShowSetModal] = useState(false);

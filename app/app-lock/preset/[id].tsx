@@ -1,8 +1,8 @@
 /**
  * App Lock — preset detail with full instructions, use, customize.
  */
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
 import { AppHeader } from '@/components/AppHeader';
@@ -13,7 +13,6 @@ import {
   getPresets,
   getActivePresetId,
   applyPreset,
-  savePreset,
   deletePreset,
 } from '@/features/app-lock/storage';
 import { BUILT_IN_PRESETS, getBuiltInPreset } from '@/features/app-lock/presets';
@@ -63,7 +62,6 @@ export default function PresetDetailScreen() {
 
   const handleDelete = () => {
     if (!preset || preset.isBuiltIn) return;
-    const { Alert } = require('react-native');
     Alert.alert('Delete preset', `Remove "${preset.name}"?`, [
       { text: 'Cancel', style: 'cancel' },
       {

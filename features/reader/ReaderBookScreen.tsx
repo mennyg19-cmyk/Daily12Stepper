@@ -224,7 +224,7 @@ export function ReaderBookScreen() {
       setBookmarkLabel('');
       setLinkedToolId(null);
       setIsAutoBookmark(false);
-    } catch (e) {
+    } catch {
       Alert.alert('Failed to add bookmark');
     } finally {
       setSubmitting(false);

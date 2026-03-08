@@ -112,7 +112,7 @@ export async function importFromFile(): Promise<{ imported: boolean; message: st
     raw = await FileSystem.readAsStringAsync(asset.uri, {
       encoding: FileSystem.EncodingType.UTF8,
     });
-  } catch (e) {
+  } catch {
     return { imported: false, message: 'Could not read file' };
   }
 

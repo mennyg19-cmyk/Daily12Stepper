@@ -24,7 +24,7 @@ import {
 } from '@/features/reader/database';
 import type { ReaderBookmarkWithBook } from '@/features/reader/database';
 import { ModalSurface } from '@/components/ModalSurface';
-import { ModalTitle, ModalButton, ModalButtonRow } from '@/components/ModalContent';
+import { ModalTitle, ModalButton } from '@/components/ModalContent';
 
 interface StepBookmarkPickerProps {
   stepNumber: number;

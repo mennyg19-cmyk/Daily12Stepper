@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 import { AppHeader } from '@/components/AppHeader';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LoadingView } from '@/components/common/LoadingView';
@@ -17,7 +16,6 @@ import { getStep6DefectsOrdered } from '@/features/steps/stepWorkDatabase';
 import { getTodayKey } from '@/utils/date';
 
 export default function Step11Screen() {
-  const router = useRouter();
   const backToAnalytics = useBackToAnalytics();
   const scrollRef = useRef<ScrollView | null>(null);
   const privacyLock = usePrivacyLock();

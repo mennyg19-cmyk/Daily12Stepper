@@ -38,7 +38,7 @@ function useDeleteEntry(
       try {
         await removeEntry(entryId);
         onAfterDelete?.(entryId);
-      } catch (e) {
+      } catch {
         Alert.alert('Failed to delete');
       }
     },
@@ -106,7 +106,7 @@ export function GratitudeScreen() {
       try {
         await addEntry(text);
         setDraft('');
-      } catch (e) {
+      } catch {
         Alert.alert('Failed to add');
       } finally {
         setSubmitting(false);
@@ -122,7 +122,7 @@ export function GratitudeScreen() {
         await updateEntry(entryId, text);
         setDraft('');
         setEditingEntryId(null);
-      } catch (e) {
+      } catch {
         Alert.alert('Failed to update');
       } finally {
         setSubmitting(false);
@@ -196,7 +196,7 @@ export function GratitudeScreen() {
       >
         <View className="mb-4">
           <Text className="text-sm text-muted-foreground">
-            Keep a running list of what you're grateful for. Add one gratitude per day (no more than five)—it's not a contest to write a long list in one go. The point is to be consistent and find the little things to be grateful for.
+            Keep a running list of what you&apos;re grateful for. Add one gratitude per day (no more than five)—it&apos;s not a contest to write a long list in one go. The point is to be consistent and find the little things to be grateful for.
           </Text>
           <Text className="text-sm text-muted-foreground mt-2">
             The point is to keep finding new things to be grateful for.
@@ -206,7 +206,7 @@ export function GratitudeScreen() {
           <View className="rounded-2xl p-5 bg-card border border-border mb-4">
             <Text className="text-lg font-bold text-foreground mb-1">Gratitude added for today</Text>
             <Text className="text-sm text-muted-foreground mb-3">
-              You've added {entriesToday.length} {entriesToday.length === 1 ? 'entry' : 'entries'} today.
+              You&apos;ve added {entriesToday.length} {entriesToday.length === 1 ? 'entry' : 'entries'} today.
             </Text>
             <View className="gap-2 mb-4">
               {entriesToday.map((entry) => (

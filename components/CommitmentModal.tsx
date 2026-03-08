@@ -65,7 +65,7 @@ export function CommitmentModal({ visible, onClose, onSaved }: CommitmentModalPr
         <View className="p-6">
           <ModalTitle>Daily commitment</ModalTitle>
           <Text className="text-muted-foreground text-center text-sm leading-5 mb-6">
-            This is entirely optional. You're committing to your stepwork for the next 24 hours.
+            This is entirely optional. You&apos;re committing to your stepwork for the next 24 hours.
             One day at a time.
           </Text>
           <View className="gap-3">

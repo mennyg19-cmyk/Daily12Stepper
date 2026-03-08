@@ -3,7 +3,7 @@
  * https://www.hebcal.com/home/195/jewish-calendar-rest-api
  * No API key required. CC BY 4.0.
  */
-import type { JewishHolidayItem } from './types';
+import type { JewishHolidayItem, HolidayCategory } from './types';
 
 const HEBCAL_BASE = 'https://www.hebcal.com/hebcal';
 
@@ -23,7 +23,7 @@ export interface HebcalParams {
 
 export interface HebcalResponse {
   title: string;
-  items: Array<{
+  items: {
     title: string;
     date: string;
     hdate?: string;
@@ -33,7 +33,7 @@ export interface HebcalResponse {
     hebrew?: string;
     link?: string;
     memo?: string;
-  }>;
+  }[];
 }
 
 /** Fetch Jewish holidays for a year from Hebcal */
@@ -68,8 +68,6 @@ export function getHolidaySlug(item: JewishHolidayItem): string {
   }
   return item.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 }
-
-import type { HolidayCategory } from './types';
 
 /** Chol Hamoed pattern in title (CH''M, CH"M, חוה"מ, חוה״מ) */
 const CHOL_HAMOED_PATTERN = /CH['"״]*M|חוה["'״]*מ|chol\s*hamoed/i;
