@@ -8,7 +8,6 @@ import type {
   PresetScheduleConfig,
   PresetScheduleRule,
   PresetCustomRange,
-  PresetHolidayRule,
 } from './types';
 import { DEFAULT_PRESET_SCHEDULE_CONFIG } from './types';
 import { getAllBuiltInPresets } from './presets';

@@ -10,8 +10,6 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  AppState,
-  type AppStateStatus,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
@@ -25,7 +23,6 @@ import {
   saveSponsorInstructions,
   startStepworkSession,
   endStepworkSession,
-  getTotalDurationForStepAndDate,
   markStepDone,
 } from '@/features/steps/database';
 import {
@@ -49,16 +46,14 @@ export default function StepScreen() {
   const today = getTodayKey();
 
   const [sponsorInstructions, setSponsorInstructions] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [timerActive, setTimerActive] = useState(false);
-  const [elapsed, setElapsed] = useState(0);
-  const [totalToday, setTotalToday] = useState(0);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [savedInstructions, setSavedInstructions] = useState('');
 
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(0);
+  // Refs mirror state so the unmount cleanup sees up-to-date values.
+  const timerActiveRef = useRef(false);
+  const sessionIdRef = useRef<string | null>(null);
 
   // Steps 1–3: reading — auto-start on scroll. Steps 4+: work/input — auto-start on focus.
   const START_ON_SCROLL_STEPS = new Set([1, 2, 3]);
@@ -67,19 +62,13 @@ export default function StepScreen() {
 
   const loadData = useCallback(async () => {
     try {
-      const [instructions, total] = await Promise.all([
-        getSponsorInstructions(stepNumber),
-        getTotalDurationForStepAndDate(stepNumber, today),
-      ]);
+      const instructions = await getSponsorInstructions(stepNumber);
       setSponsorInstructions(instructions ?? '');
       setSavedInstructions(instructions ?? '');
-      setTotalToday(total);
-    } catch (err) {
+    } catch {
       // ignore
-    } finally {
-      setLoading(false);
     }
-  }, [stepNumber, today]);
+  }, [stepNumber]);
 
   useEffect(() => {
     loadData();
@@ -90,34 +79,28 @@ export default function StepScreen() {
     try {
       const id = await startStepworkSession(stepNumber, today);
       setSessionId(id);
+      sessionIdRef.current = id;
       setTimerActive(true);
+      timerActiveRef.current = true;
       startTimeRef.current = Math.floor(Date.now() / 1000);
-      setElapsed(0);
-      timerRef.current = setInterval(() => {
-        setElapsed((e) => e + 1);
-      }, 1000);
-    } catch (err) {
+    } catch {
       // ignore
     }
   }, [timerActive, stepNumber, today]);
 
   const stopTimer = useCallback(async () => {
     if (!timerActive || !sessionId) return;
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
     const now = Math.floor(Date.now() / 1000);
     const duration = now - startTimeRef.current;
     try {
       await endStepworkSession(sessionId, duration);
-      setTotalToday((t) => t + duration);
-    } catch (err) {
+    } catch {
       // ignore
     }
     setTimerActive(false);
+    timerActiveRef.current = false;
     setSessionId(null);
-    setElapsed(0);
+    sessionIdRef.current = null;
   }, [timerActive, sessionId]);
 
   useFocusEffect(
@@ -138,37 +121,24 @@ export default function StepScreen() {
     }
   }, [startOnScroll, startTimer]);
 
-  // When app returns from background, recalc elapsed (setInterval is paused when backgrounded)
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', (state: AppStateStatus) => {
-      if (state === 'active' && timerActive && sessionId) {
-        const now = Math.floor(Date.now() / 1000);
-        const elapsed = now - startTimeRef.current;
-        setElapsed(elapsed);
-      }
-    });
-    return () => sub.remove();
-  }, [timerActive, sessionId]);
-
+  // Cleanup on unmount: end any active session using refs to avoid stale closure.
   useEffect(() => {
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-      if (timerActive && sessionId) {
+      if (timerActiveRef.current && sessionIdRef.current) {
         const now = Math.floor(Date.now() / 1000);
         const duration = now - startTimeRef.current;
-        endStepworkSession(sessionId, duration).catch(() => {});
+        endStepworkSession(sessionIdRef.current, duration).catch(() => {});
       }
     };
   }, []);
 
   const handleSaveInstructions = useCallback(async () => {
     if (sponsorInstructions === savedInstructions) return;
-    setSaving(true);
     try {
       await saveSponsorInstructions(stepNumber, sponsorInstructions.trim() || null);
       setSavedInstructions(sponsorInstructions);
-    } finally {
-      setSaving(false);
+    } catch {
+      // ignore
     }
   }, [stepNumber, sponsorInstructions, savedInstructions]);
 

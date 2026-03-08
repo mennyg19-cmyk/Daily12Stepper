@@ -122,7 +122,7 @@ export function ExtraToolsScreen() {
       if (draftReminder) {
         scheduleExtraToolReminders().catch(() => {});
       }
-    } catch (e) {
+    } catch {
       Alert.alert('Failed to save');
     } finally {
       setSubmitting(false);
@@ -167,7 +167,7 @@ export function ExtraToolsScreen() {
         }
       >
         <Text className="text-sm text-muted-foreground mb-4">
-          Add custom tools like "Call sponsor 3x/week" with reminders. Mark them complete when done.
+          Add custom tools like &quot;Call sponsor 3x/week&quot; with reminders. Mark them complete when done.
         </Text>
 
         {/* Date selector */}

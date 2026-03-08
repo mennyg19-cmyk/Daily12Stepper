@@ -9,7 +9,6 @@ import {
   ModalSection,
   ModalButton,
 } from '@/components/ModalContent';
-import { useIconColors } from '@/lib/iconTheme';
 import type { InventoryEntry } from '@/lib/database/schema';
 
 interface ResentmentFormProps {
@@ -33,7 +32,6 @@ export function ResentmentForm({
   removeEntry,
   privacyLock,
 }: ResentmentFormProps) {
-  const iconColors = useIconColors();
   const [who, setWho] = useState('');
   const [whatHappened, setWhatHappened] = useState('');
   const [affects, setAffects] = useState<string[]>([]);

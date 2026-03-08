@@ -14,14 +14,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { AppHeader } from '@/components/AppHeader';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { ChevronRight, Plus, Trash2, User, Clock } from 'lucide-react-native';
+import { Plus, Trash2 } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import {
   getProfile,
   saveProfile,
   getAddictions,
   addAddiction,
-  updateAddiction,
   deleteAddiction,
   getSponsorWorkTimeMinutes,
   setSponsorWorkTimeMinutes,
@@ -35,7 +34,6 @@ export default function ProfileScreen() {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [addictions, setAddictions] = useState<Addiction[]>([]);
-  const [sponsorMinutes, setSponsorMinutes] = useState<number | null>(null);
   const [editName, setEditName] = useState('');
   const [editBirthday, setEditBirthday] = useState('');
   const [editSponsorMinutes, setEditSponsorMinutes] = useState('');
@@ -50,7 +48,6 @@ export default function ProfileScreen() {
     ]);
     setProfile(p);
     setAddictions(a);
-    setSponsorMinutes(m);
     setEditName(p.name);
     setEditBirthday(p.birthday ?? '');
     setEditSponsorMinutes(m != null ? String(m) : '');
@@ -77,18 +74,16 @@ export default function ProfileScreen() {
     const n = parseInt(editSponsorMinutes, 10);
     if (isNaN(n) || n < 1) {
       await setSponsorWorkTimeMinutes(null);
-      setSponsorMinutes(null);
       setEditSponsorMinutes('');
     } else {
       await setSponsorWorkTimeMinutes(n);
-      setSponsorMinutes(n);
     }
   };
 
   const handleAddAddiction = async () => {
     const name = newAddictionName.trim();
     if (!name) return;
-    const added = await addAddiction(name);
+    await addAddiction(name);
     setAddictions(await getAddictions());
     setNewAddictionName('');
     setShowAddAddiction(false);

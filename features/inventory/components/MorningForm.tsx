@@ -5,7 +5,6 @@ import { DoneCard } from './DoneCard';
 import { emptyPayload, parseMorningNotes } from '../helpers';
 import { isToday } from '@/utils/date';
 import { ModalLabel, ModalInput, ModalSection, ModalButton } from '@/components/ModalContent';
-import { useSwitchColors } from '@/lib/iconTheme';
 import type { InventoryEntry } from '@/lib/database/schema';
 
 interface MorningFormProps {
@@ -35,8 +34,6 @@ export function MorningForm({
   const [prayed, setPrayed] = useState(false);
   const [plans, setPlans] = useState('');
   const [notes, setNotes] = useState('');
-
-  const existing = morningEntryToday ? parseMorningNotes(morningEntryToday.notes) : {};
 
   const handleSave = async () => {
     const hasContent = prayed || plans.trim() || notes.trim();

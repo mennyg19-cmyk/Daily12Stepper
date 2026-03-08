@@ -4,7 +4,7 @@
  * Editable target (e.g. 1 hour = 60 min).
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import { getSponsorWorkTimeGoal, getSponsorWorkTimeProgress, createSponsorWorkTimeTool, updateSponsorWorkTimeGoal } from './database';
 import { getTodayKey } from '@/utils/date';

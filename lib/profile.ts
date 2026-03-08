@@ -114,7 +114,7 @@ export async function setCardsCollapsed(collapsed: boolean): Promise<void> {
 /** Check if today is the user's birthday (MM-DD match) */
 export function isBirthdayToday(birthday: string | null): boolean {
   if (!birthday) return false;
-  const [y, m, d] = birthday.split('-').map(Number);
+  const [, m, d] = birthday.split('-').map(Number);
   const now = new Date();
   return now.getMonth() + 1 === (m ?? 0) && now.getDate() === (d ?? 0);
 }

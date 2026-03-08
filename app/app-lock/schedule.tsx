@@ -4,7 +4,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 import { AppHeader } from '@/components/AppHeader';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Check } from 'lucide-react-native';
@@ -16,7 +15,6 @@ type ActivateAt = AppLockSchedule['activateAt'];
 
 export default function AppLockScheduleScreen() {
   const iconColors = useIconColors();
-  const router = useRouter();
   const [config, setConfig] = useState<AppLockConfig | null>(null);
 
   const load = useCallback(async () => {

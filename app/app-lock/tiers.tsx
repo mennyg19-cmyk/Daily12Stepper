@@ -52,16 +52,6 @@ export default function AppLockTiersScreen() {
     router.push(`/app-lock/tier/${id}`);
   };
 
-  const removeTier = async (id: string) => {
-    if (!config) return;
-    const next: AppLockConfig = {
-      ...config,
-      tiers: config.tiers.filter((t) => t.id !== id),
-    };
-    setConfig(next);
-    await saveAppLockConfig(next);
-  };
-
   if (!config) return null;
 
   return (

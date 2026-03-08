@@ -2,7 +2,7 @@
  * Notifications — full module for per-type reminders.
  * Commitment, stepwork, per-step, sponsor work time remaining, and tools.
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Switch, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,7 +12,6 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { ChevronDown, ChevronRight, Bell, Plus } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import {
-  getNotificationConfig,
   setNotificationConfig,
   getAllNotificationConfigs,
   type NotificationType,
@@ -211,7 +210,6 @@ export default function NotificationsScreen() {
   const [configs, setConfigs] = useState<Record<NotificationType, NotificationConfig> | null>(null);
   const [tools, setTools] = useState<ExtraTool[]>([]);
   const [stepsExpanded, setStepsExpanded] = useState(false);
-  const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     const [c, t] = await Promise.all([
@@ -235,32 +233,26 @@ export default function NotificationsScreen() {
       Alert.alert('Permission needed', 'Enable notifications to get reminders.');
       return;
     }
-    setSaving(true);
     const next = { ...configs[type], enabled };
     setConfigs((prev) => (prev ? { ...prev, [type]: next } : prev));
     await setNotificationConfig(type, next);
     await scheduleAllNotifications();
-    setSaving(false);
   };
 
   const handleTimeChange = async (type: NotificationType, time: string) => {
     if (!configs) return;
-    setSaving(true);
     const next = { ...configs[type], time };
     setConfigs((prev) => (prev ? { ...prev, [type]: next } : prev));
     await setNotificationConfig(type, next);
     await scheduleAllNotifications();
-    setSaving(false);
   };
 
   const handleMinutesLeftChange = async (mins: number) => {
     if (!configs) return;
-    setSaving(true);
     const next = { ...configs.sponsor_work_time_remaining, minutesLeft: mins };
     setConfigs((prev) => (prev ? { ...prev, sponsor_work_time_remaining: next } : prev));
     await setNotificationConfig('sponsor_work_time_remaining', next);
     await scheduleAllNotifications();
-    setSaving(false);
   };
 
   const handleToolToggle = async (tool: ExtraTool, enabled: boolean) => {
