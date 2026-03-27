@@ -3,7 +3,7 @@
  */
 import React, { Component, type ReactNode } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useIconColors } from '@/lib/iconTheme';
+import { logger } from '@/lib/logger';
 
 interface Props {
   children: ReactNode;
@@ -27,9 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    if (__DEV__) {
-      console.error('ErrorBoundary caught:', error, errorInfo);
-    }
+    logger.error('ErrorBoundary caught:', error, errorInfo);
   }
 
   handleRetry = () => {
@@ -54,7 +52,6 @@ export class ErrorBoundary extends Component<Props, State> {
 }
 
 function ErrorFallback({ error, onRetry }: { error: Error; onRetry: () => void }) {
-  const iconColors = useIconColors();
   return (
     <View className="flex-1 bg-background items-center justify-center p-8">
       <Text className="text-6xl mb-4">😅</Text>

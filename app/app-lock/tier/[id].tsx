@@ -7,10 +7,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { AppHeader } from '@/components/AppHeader';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { useIconColors } from '@/lib/iconTheme';
 import { getAppLockConfig, saveAppLockConfig } from '@/features/app-lock/storage';
 import { openAppPicker } from '@/features/app-lock/native';
-import type { AppLockConfig, AppLockTier, TierUnlockCondition } from '@/features/app-lock/types';
+import type { AppLockConfig, TierUnlockCondition } from '@/features/app-lock/types';
 
 const ALL_STEPS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
@@ -21,7 +20,6 @@ const UNLOCK_OPTIONS: { value: TierUnlockCondition; label: string }[] = [
 ];
 
 export default function AppLockTierEditScreen() {
-  const iconColors = useIconColors();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [config, setConfig] = useState<AppLockConfig | null>(null);

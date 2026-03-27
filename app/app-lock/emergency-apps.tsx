@@ -2,17 +2,15 @@
  * App Lock — emergency apps always allowed (Phone, Messages, etc.).
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppHeader } from '@/components/AppHeader';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { useIconColors } from '@/lib/iconTheme';
 import { getAppLockConfig, saveAppLockConfig } from '@/features/app-lock/storage';
 import { openAppPicker } from '@/features/app-lock/native';
 import type { AppLockConfig } from '@/features/app-lock/types';
 
 export default function AppLockEmergencyAppsScreen() {
-  const iconColors = useIconColors();
   const [config, setConfig] = useState<AppLockConfig | null>(null);
 
   const load = useCallback(async () => {

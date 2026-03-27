@@ -4,7 +4,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useFocusEffect } from 'expo-router';
+import { useFocusEffect } from 'expo-router';
 import { AppHeader } from '@/components/AppHeader';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Check } from 'lucide-react-native';
@@ -17,7 +17,6 @@ import {
 
 export default function DefaultPresetScreen() {
   const iconColors = useIconColors();
-  const router = useRouter();
   const [schedule, setSchedule] = useState<Awaited<ReturnType<typeof getPresetScheduleConfig>> | null>(null);
   const [presets, setPresets] = useState<{ id: string; name: string }[]>([]);
 

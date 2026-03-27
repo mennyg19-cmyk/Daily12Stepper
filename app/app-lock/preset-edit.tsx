@@ -1,7 +1,7 @@
 /**
  * App Lock — create or edit preset (name, notes, configure).
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
@@ -17,7 +17,7 @@ import {
   setActivePresetId,
 } from '@/features/app-lock/storage';
 import { getBuiltInPreset } from '@/features/app-lock/presets';
-import type { AppLockPreset, AppLockConfig, LockMode } from '@/features/app-lock/types';
+import type { AppLockPreset, AppLockConfig, AppLockTier, LockMode, BuiltInPresetId } from '@/features/app-lock/types';
 
 export default function PresetEditScreen() {
   const iconColors = useIconColors();
@@ -48,7 +48,7 @@ export default function PresetEditScreen() {
       }
     }
     if (fromPresetId) {
-      const p = all.find((x) => x.id === fromPresetId) ?? (fromPresetId.startsWith('builtin-') ? getBuiltInPreset(fromPresetId.replace('builtin-', '') as any) : null);
+      const p = all.find((x) => x.id === fromPresetId) ?? (fromPresetId.startsWith('builtin-') ? getBuiltInPreset(fromPresetId.replace('builtin-', '') as BuiltInPresetId) : null);
       if (p) {
         setName(`${p.name} (my copy)`);
         setNotes(p.notes);
@@ -66,7 +66,7 @@ export default function PresetEditScreen() {
       enabled: true,
       mode: 'full' as const,
       emergencyAppIds: [] as string[],
-      tiers: [] as any[],
+      tiers: [] as AppLockTier[],
       schedule: { activateAt: 'morning' as const, morningHour: 6, nightHour: 22 },
       fullModeBlockAll: true,
     };

@@ -9,6 +9,8 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native';
 import { useThemeStyle } from '@/lib/ThemeContext';
 
@@ -39,7 +41,7 @@ export function ModalSurface({
 
   const contentWrapperStyle =
     position === 'bottom'
-      ? [styles.contentBase, styles.contentBottom, { height: '85%' as any }]
+      ? [styles.contentBase, styles.contentBottom, { height: '85%' as `${number}%` }]
       : [styles.contentBase, styles.contentCenter];
 
   const handleOverlayPress = () => {
@@ -60,10 +62,10 @@ export function ModalSurface({
     </ScrollView>
   );
 
-  const contentStyle = position === 'bottom' ? [themeStyle, { flex: 1 }] : themeStyle;
+  const contentStyle: StyleProp<ViewStyle> = position === 'bottom' ? [themeStyle, { flex: 1 }] : themeStyle;
   const content = (
     <View
-      style={[contentStyle as any]}
+      style={contentStyle}
       className={`bg-modal-content border border-modal-border rounded-2xl overflow-hidden ${contentClassName}`.trim()}
     >
       {inner}

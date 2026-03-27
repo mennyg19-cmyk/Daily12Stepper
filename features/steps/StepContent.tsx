@@ -2,13 +2,11 @@
  * Step-specific content and input forms.
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Check, Trash2 } from 'lucide-react-native';
 import { useIconColors } from '@/lib/iconTheme';
 import {
-  STEP_READING_CONTENT,
   STEP_CHECKOFF_LABELS,
-  STEP_CONTENT,
   STEP1_INTRO,
   STEP3_QUESTION,
   STEP3_PRAYER,
@@ -40,11 +38,11 @@ import {
   getStep4Resentments,
   addStep4Resentment,
   updateStep4Resentment,
-  deleteStep4Resentment,
   getStep4Standalone,
   addStep4Standalone,
   updateStep4Standalone,
   deleteStep4Standalone,
+  getStep4DefectsInOrder,
 } from './step4Database';
 import type { Step4Person, Step4Resentment, Step4Standalone } from './step4Database';
 import {
@@ -54,7 +52,6 @@ import {
   deleteStep5Sharing,
 } from './step5Database';
 import type { Step5Sharing } from './step5Database';
-import { getStep4DefectsInOrder } from './step4Database';
 import {
   getStep7EpisodesForDefect,
   addStep7Episode,
@@ -72,7 +69,6 @@ import {
   copyInstructionToClipboard,
 } from './step12Database';
 import type { Step12Instruction, Step12Sponsee } from './step12Database';
-import { getTodayKey } from '@/utils/date';
 import { ModalLabel, ModalInput, ModalSection, ModalButton, ModalButtonRow, ModalTitle } from '@/components/ModalContent';
 import { ModalSurface } from '@/components/ModalSurface';
 
@@ -356,7 +352,6 @@ export function Step3Content({ stepNumber, today, onStartTimer }: StepContentPro
 }
 
 export function Step4Content({ stepNumber, today, onStartTimer }: StepContentProps) {
-  const iconColors = useIconColors();
   const [people, setPeople] = useState<Step4Person[]>([]);
   const [showAddPerson, setShowAddPerson] = useState(false);
   const [personName, setPersonName] = useState('');
@@ -557,11 +552,14 @@ function Step4StandaloneRow({
   const [affects, setAffects] = useState(entry.affects);
   const [myPart, setMyPart] = useState(entry.myPart);
 
+  // Initialize form fields when entry changes; intentionally depends only on entry.id
+  // to avoid resetting user edits on each keystroke.
   useEffect(() => {
     setWho(entry.who);
     setWhy(entry.why);
     setAffects(entry.affects);
     setMyPart(entry.myPart);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry.id]);
 
   const save = useCallback(async () => {
@@ -746,7 +744,6 @@ function Step4ResentmentRow({
 }
 
 export function Step5Content({ stepNumber, today, onStartTimer }: StepContentProps) {
-  const iconColors = useIconColors();
   const [sharings, setSharings] = useState<Step5Sharing[]>([]);
   const [showAdd, setShowAdd] = useState(false);
   const [personName, setPersonName] = useState('');
@@ -903,7 +900,7 @@ export function Step6Content({ stepNumber, today, onStartTimer }: StepContentPro
     setStep4DefectSet(new Set(step4Defects));
     setDefects(merged);
     setReadySet(new Set(readyDefects));
-  }, [stepNumber, today]);
+  }, [today]);
 
   useEffect(() => {
     load();
@@ -1038,7 +1035,6 @@ export function Step6Content({ stepNumber, today, onStartTimer }: StepContentPro
 }
 
 export function Step7Content({ stepNumber, today, onStartTimer }: StepContentProps) {
-  const iconColors = useIconColors();
   const [defects, setDefects] = useState<string[]>([]);
   const [defectCounts, setDefectCounts] = useState<Record<string, number>>({});
   const [expandedDefect, setExpandedDefect] = useState<string | null>(null);
@@ -1165,7 +1161,6 @@ function Step7DefectBlock({
   onAddEpisode: () => void;
   onStartTimer?: () => void;
 }) {
-  const iconColors = useIconColors();
   const [episodes, setEpisodes] = useState<Step7Episode[]>([]);
 
   useEffect(() => {
@@ -1215,10 +1210,12 @@ function Step7EpisodeRow({
   const [whyText, setWhyText] = useState(episode.whyText);
   const [betterResponse, setBetterResponse] = useState(episode.betterResponse);
 
+  // Initialize form fields when episode changes; intentionally depends only on episode.id.
   useEffect(() => {
     setWhenText(episode.whenText);
     setWhyText(episode.whyText);
     setBetterResponse(episode.betterResponse);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episode.id]);
 
   const save = useCallback(async () => {
@@ -1251,7 +1248,6 @@ function Step7EpisodeRow({
 }
 
 export function Step12Content({ stepNumber, today, onStartTimer }: StepContentProps) {
-  const iconColors = useIconColors();
   const [instructions, setInstructions] = useState<Step12Instruction[]>([]);
   const [sponsees, setSponsees] = useState<Step12Sponsee[]>([]);
   const [showAddSponsee, setShowAddSponsee] = useState(false);
@@ -1385,9 +1381,11 @@ function Step12SponseeRow({
   const [currentStep, setCurrentStep] = useState(sponsee.currentStepNumber);
   const [notes, setNotes] = useState(sponsee.notes);
 
+  // Initialize form fields when sponsee changes; intentionally depends only on sponsee.id.
   useEffect(() => {
     setCurrentStep(sponsee.currentStepNumber);
     setNotes(sponsee.notes);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sponsee.id]);
 
   const handleDelete = () => {
@@ -1467,7 +1465,7 @@ export function Step8Content({ stepNumber, today, onStartTimer }: StepContentPro
   return (
     <View className="mb-4">
       <Text className="text-sm text-muted-foreground mb-3">
-        List people you have harmed (with your sponsor's help—this is separate from Step 4, where we tend to take too much blame).
+        List people you have harmed (with your sponsor&apos;s help—this is separate from Step 4, where we tend to take too much blame).
       </Text>
       <TouchableOpacity
         onPress={() => setShowAdd(true)}
